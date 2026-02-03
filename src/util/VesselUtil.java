@@ -1,21 +1,20 @@
-package util;
+public List<Vessel> getVesselList() {
+    return vesselList;
+}
+}
+// returns vessel object for given vesselId
+public Vessel getVesselById(String vesselId) {
 
-import java.util.ArrayList;
-import java.util.List;
-import model.Vessel;
+    // iterate through vessel list
+    for (Vessel vessel : vesselList) {
 
-public class VesselUtil {
-
-    // stores all vessel objects
-    private List<Vessel> vesselList = new ArrayList<>();
-
-    // adds a vessel to the list
-    public void addVesselPerformance(Vessel vessel) {
-        vesselList.add(vessel);
+        // case-sensitive comparison
+        if (vessel.getVesselId().equals(vesselId)) {
+            return vessel; // vessel found
+        }
     }
 
-    // returns the list when needed
-    public List<Vessel> getVesselList() {
-        return vesselList;
-    }
+    // if no vessel matches
+    return null;
+}
 }
