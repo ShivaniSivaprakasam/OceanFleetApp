@@ -1,59 +1,72 @@
-package util;
+package ui;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
+
 import model.Vessel;
+import util.VesselUtil;
 
-public class VesselUtil {
+public class UserInterface {
 
-    // stores all vessel objects
-    private List<Vessel> vesselList = new ArrayList<>();
+    public static void main(String[] args) {
 
-    // adds a vessel to the list
-    public void addVesselPerformance(Vessel vessel) {
-        vesselList.add(vessel);
-    }
+        Scanner sc = new Scanner(System.in);
+        VesselUtil util = new VesselUtil();
 
-    // returns the list when needed
-    public List<Vessel> getVesselList() {
-        return vesselList;
-    }
-    // returns vessel object for given vesselId
-    public Vessel getVesselById(String vesselId) {
+        // read number of vessels
+        System.out.println("Enter the number of vessels to be added");
+        int n = Integer.parseInt(sc.nextLine());
 
-        // iterate through vessel list
-        for (Vessel vessel : vesselList) {
+        // read vessel details
+        System.out.println("Enter vessel details");
+        for (int i = 0; i < n; i++) {
 
-            // case-sensitive comparison
-            if (vessel.getVesselId().equals(vesselId)) {
-                return vessel; // vessel found
-            }
+            // input format: id:name:speed:type
+            String input = sc.nextLine();
+            String[] data = input.split(":");
+
+            // create vessel object
+            Vessel vessel = new Vessel(
+                    data[0],
+                    data[1],
+                    Double.parseDouble(data[2]),
+                    data[3]
+            );
+
+            // add to list
+            util.addVesselPerformance(vessel);
         }
 
-        // if no vessel matches
-        return null;
-    }
-    // returns vessels with highest average speed
-    public List<Vessel> getHighPerformanceVessels() {
+        // retrieve vessel by id
+        System.out.println("Enter the Vessel Id to check speed");
+        String searchId = sc.nextLine();
 
-        List<Vessel> highPerformanceList = new ArrayList<>();
+        Vessel result = util.getVesselById(searchId);
 
-        double maxSpeed = 0;
-
-        // find maximum speed
-        for (Vessel vessel : vesselList) {
-            if (vessel.getAverageSpeed() > maxSpeed) {
-                maxSpeed = vessel.getAverageSpeed();
-            }
+        if (result != null) {
+            System.out.println(
+                    result.getVesselId() + " | " +
+                            result.getVesselName() + " | " +
+                            result.getVesselType() + " | " +
+                            result.getAverageSpeed() + " knots"
+            );
+        } else {
+            System.out.println("Vessel Id " + searchId + " not found");
         }
 
-        // collect vessels matching max speed
-        for (Vessel vessel : vesselList) {
-            if (vessel.getAverageSpeed() == maxSpeed) {
-                highPerformanceList.add(vessel);
-            }
+        // display high performance vessels
+        System.out.println("High performance vessels are");
+        List<Vessel> highList = util.getHighPerformanceVessels();
+
+        for (Vessel v : highList) {
+            System.out.println(
+                    v.getVesselId() + " | " +
+                            v.getVesselName() + " | " +
+                            v.getVesselType() + " | " +
+                            v.getAverageSpeed() + " knots"
+            );
         }
 
-        return highPerformanceList;
+        sc.close();
     }
 }
